@@ -1,0 +1,216 @@
+---
+title: "Pop Songs Network Analysis"
+output:
+  html_document:
+    df_print: paged
+  word_document: default
+---
+# By Group 1: Kaixuan Han, Ashley Garbaccio, and Brenden Moore
+# Content
+### 1.Introduction
+### 2.Data
+### 3.Analysis
+### 4.Conlcusion
+<br>
+
+# Ⅰ. Introduction
+#### In the vibrant pop music industry, there lies a complex, interconnected network that is often overlooked by the casual listener. This network is comprised not only of artists but also the essential producers who breathe life into their songs. We wanted to evaluate the relationships between producers who have produced the Top 30 Pop songs of 2022 and answer questions like: Which producers are the most connected and influential? If we are making a recommendation to an artist that wants a song in the Top 30 charts and a Grammy award, which producer(s) should they hire? In this report, we dive into a detailed network analysis, illuminating the collaboration among producers and patterns that underpin this dynamic landscape.
+<br>
+
+# Ⅱ. Data
+#### The analysis is founded upon two integral datasets of top 52 pop song producers extracted from the billboard ranking: the first being an adjacency matrix which delineates the collaboration history among producers, and the second, a comprehensive attributes list providing details about each producer. The attribute list encompasses gender, an indicator of whether they have achieved a Grammy award, the count of Grammy awards received, and the frequency of their Grammy nominations.
+#### The following are the sample of the two data sets.
+![Figure 1. Adjacency matrix that delineates the collaboration history among producers](data:image/png;base64,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)
+
+#### '1' represents that the two producer have collaborated with each other while '0' represents they have not. The diagonal values are all '0' since whether a producer has collaborated with himself is meaningless.
+<br>
+
+![Figure 2. Attributes of producers ](data:image/png;base64,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)
+
+<br>
+
+# Ⅲ. Analysis
+
+```{r}
+#read the data
+
+#Make an undirected graph and plot it; use set.seed(1234)
+
+library(igraph)
+
+df <- read.csv("Pop_Adjacency_Matrix.csv", row.names = 1)
+mat <- as.matrix(df)
+
+g <- graph_from_adjacency_matrix(mat, mode="undirected")
+
+set.seed(1234)
+plot(g)
+```
+
+## Histogram of the Pop Producers Network
+```{r}
+hist(degree(g))
+```
+ 
+ - Producers can produce songs on their own or with one or two other producers. This histogram illustrates that in the Top 30 Pop Songs network, a degree of 2 occurs most frequently meaning most producers collaborate with 2 other producers.
+
+## Betweenness
+```{r}
+sort(betweenness(g))
+```
+ - We wanted to measure the extent to which a producer is on the geodesic paths of all other pairs of nodes in the Top 30 Pop songs network. This helps us answer the question: how important are certain producers in facilitating collaboration and connections between other producers in the network? Noah Kahan and Gabe Simon occupy central positions in this network and act as key connectors for information flow and collaborations in the network.
+
+## Eigenvector Centrality
+```{r}
+sort(eigen_centrality(g)$vector)
+```
+ - Again, we wanted to measure the influence or importance of a producer in the network based on their connections to other highly connected producers. A higher eigenvector centrality score suggests that a producer is connected to other producers who are themselves well-connected. In this analysis, Chris Jedi, Gaby Music, and Noah Kahan have scores of 1 or very close to 1. These producers are connected to other highly influential producers and occupy important positions in the producer network structure.
+ 
+## Centralization
+```{r}
+# What is the centralization score of the entire network?
+centralization.degree(g)$centralization
+```
+
+```{r}
+#Obtain the largest component and plot it; please use set.seed(1234)
+
+clu <- components(g)
+biggest_cluster_id <- which.max(clu$csize)
+vert_ids <- V(g)[clu$membership == biggest_cluster_id]
+maincluster <- induced_subgraph(g, vert_ids)
+maincluster
+```
+
+```{r}
+#plot largest cluster 
+
+set.seed(1234)
+plot(maincluster, vertex.size=25, vertex.label.cex=.75, vertex.color="green")
+```
+
+```{r}
+# (d) Obtain the degree distribution of the largest cluster and plot it
+
+degree(maincluster)
+```
+
+```{r}
+hist(degree(maincluster))
+```
+
+```{r}
+wt <- cluster_walktrap(maincluster, steps=20)
+
+set.seed(1234)
+plot(wt, maincluster, 
+     vertex.size=20, vertex.label.cex=.65, vertex.label.font=15, vertex.color="beige")
+```
+
+## Pop Producer Network Attributes
+```{r}
+# Read the data
+popattr <- read.csv("popattribs.csv", header = T)
+
+# Getting adjacency matrix
+adj <- mat %*% t(mat)
+
+# Set diagonal to zero
+diag(adj) <- 0
+
+# any two producers must have collaborated with at least 1 other producer
+adj <- ifelse(adj >= 1,1,0)
+```
+
+
+```{r}
+#Create igraph object
+library(igraph)
+g2 <- graph_from_adjacency_matrix(adj, mode="undirected")
+
+# Add attributes, straightforward because order of attributes is same as that of the order of nodes
+g2$sex <- popattr$Sex
+g2$name <- popattr$Producer.Name
+g2$grammy <- popattr$Grammy
+g2$grammywins <- popattr$GrammyWins
+g2$grammynoms <- popattr$GrammyNoms
+```
+
+```{r}
+V(g2)$color <- ifelse(g2$sex == "F", "pink", "lightblue")
+V(g2)$shape <- ifelse(g2$grammy == "Y", "square", "circle")
+set.seed(1234)
+plot(g2, vertex.size= g2$grammywins, vertex.label= g2$name)
+```
+
+## Homophily Test
+
+```{r}
+assortativity_nominal(g2, as.factor(g2$sex), directed=FALSE)
+```
+#### The negative assortativity coefficient of sex indicates that producers of different genders tend to collaborate more with each other compared with that of the same gender.
+```{r}
+assortativity_nominal(g2, as.factor(g2$grammy), directed=FALSE)
+```
+#### The negative assortativity coefficient of grammy indicates that producers with grammy tend to collaborate more with those without a grammy.
+
+```{r}
+assortativity(g2, g2$grammywins, directed=FALSE)
+```
+#### The negative assortativity coefficient of grammywins indicates that music producers with different numbers of Grammy awards won are more likely to collaborate with each other.
+
+```{r}
+assortativity(g2, g2$grammynoms, directed=FALSE)
+```
+#### The negative assortativity coefficient of grammynoms indicates that music producers with different numbers of Grammy nominations are more likely to collaborate with each other.
+<br>
+
+## Correlation
+```{r}
+v1 <- c(0,0,32,1,0,0,0,3,1,0,0,1,2,0,0,0,0,0,2,0,8,0,0,0,0,1,0,0,0,0,3,0,1,0,1,0,0,7,3,0,0,3,0,1,1,12,0,7,0,2,0,0)
+
+v2 <- c(0,0,88,4,1,4,0,12,2,0,0,3,11,0,8,0,0,2,2,5,18,0,2,0,0,0,0,2,0,10,9,0,1,0,6,0,1,8,10,0,7,11,0,6,1,46,0,21,1,5,1,4)
+
+grammywins <- matrix(v1, nrow = 1, byrow = TRUE)
+grammynoms <- matrix(v2, nrow = 1, byrow = TRUE)
+
+
+rownames(grammywins) <- rownames(grammynoms) <- LETTERS[seq( from = 1, to = 1 )]
+colnames(grammywins) <- colnames(grammynoms) <- LETTERS[seq( from = 1, to = 52 )]
+
+```
+
+
+```{r}
+library(sna)
+gcor(grammynoms,grammywins)
+```
+
+ - This correlation value suggests a strong correlation between Grammy nominations and Grammy wins. Higher values of Grammy nominations are associated with higher values of Grammy wins.
+ 
+## QAP Test
+ - We wanted to answer the question: is there a correlation between Grammy nominations and Grammy wins?
+```{r}
+q <- qaptest(list(grammynoms,grammywins), gcor,g1=1,g2=2)
+q
+```
+```{r}
+plot(q)
+```
+
+##MRQAP
+```{r}
+sr1 <- netlm(grammynoms,grammywins, reps = 1000)
+summary(sr1)
+```
+ - The QAP Test shows the p value is very close to 0 and the MRQAP test shows the R-squared value is 0.94, which both indicates there is an extremely strong relationship between Grammy nominations and Grammy wins. 
+
+# Ⅳ. Conclusion
+ - As consultants in the music industry, we are here to form a recommendation for an artist looking to have a song in the Top Pop Songs list and increase their chances of winning a Grammy.
+ - We know from our degree histogram, most producers collaborate with two other producers. Therefore, we recommend an artist hire Noah Kahn, Beyonce, and Taylor Swift.
+    - Noah is not only is the most collaborative producer and a central node, but also is well connected to other highly influential producers as shown by his eigenvector centrality score of ~1. 
+   - If the artist is looking for Grammy nominations and wins, we recommend collaborating with Beyonce and Taylor Swift as they have the highest volume of these attributes. We also know there's a high correlation of being nominated for a Grammy and winning a Grammy.
+    - We also know from our homophily testing, the negative assortativity coefficient of having a Grammy indicates that producers with a Grammy tend to collaborate more with those without. This supports our recommendation for a new artist to collaborate with Grammy-winning producers. Noah does not have a Grammy, yet Beyonce and Taylor Swift do.
+ 
+
+
